@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<!-- Created By CodingNepal -->
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <title>Login and Registration Form in HTML | CodingNepal</title>
+    <link rel="stylesheet" href="style.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="/toasting.js"></script>
+    <link rel="stylesheet" href="/toasting.css" />
+  </head>
+
+  <body>
+    <div class="wrapper">
+      <div class="title-text">
+        <div class="title login">Login Form</div>
+        <div class="title signup">Signup Form</div>
+      </div>
+      <div class="form-container">
+        <div class="slide-controls">
+          <input type="radio" name="slide" id="login" checked />
+          <input type="radio" name="slide" id="signup" />
+          <label for="login" class="slide login">Login</label>
+          <label for="signup" class="slide signup">Signup</label>
+          <div class="slider-tab"></div>
+        </div>
+        <div class="form-inner">
+          <form action="#" class="login">
+            <div class="field">
+              <input
+                type="text"
+                id="email1"
+                placeholder="Email Address"
+                required
+              />
+            </div>
+            <div class="field">
+              <input
+                type="password"
+                id="password1"
+                placeholder="Password"
+                required
+              />
+            </div>
+            <div class="pass-link">
+              <a href="#">Forgot password?</a>
+            </div>
+            <div class="field btn">
+              <div class="btn-layer"></div>
+              <input
+                type="submit"
+                value="Login"
+                onclick=" event.preventDefault(); login()"
+              />
+            </div>
+            <div class="signup-link">
+              Not a member? <a href="">Signup now</a>
+            </div>
+          </form>
+          <form action="#" class="signup">
+            <div class="field">
+              <input type="text" id="name" placeholder="Name" required />
+            </div>
+            <div id="name1"></div>
+            <div class="field">
+              <input
+                type="text"
+                id="email"
+                placeholder="Email Address"
+                required
+              />
+            </div>
+            <div id="email12"></div>
+            <div class="field">
+              <input
+                type="password"
+                id="password"
+                placeholder="Password"
+                required
+              />
+            </div>
+            <div id="password12"></div>
+            <div class="field btn">
+              <div class="btn-layer"></div>
+              <input
+                type="submit"
+                value="Signup"
+                onclick=" event.preventDefault(); register()"
+              />
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <script>
+      const loginText = document.querySelector(".title-text .login");
+      const loginForm = document.querySelector("form.login");
+      const loginBtn = document.querySelector("label.login");
+      const signupBtn = document.querySelector("label.signup");
+      const signupLink = document.querySelector("form .signup-link a");
+      signupBtn.onclick = () => {
+        loginForm.style.marginLeft = "-50%";
+        loginText.style.marginLeft = "-50%";
+      };
+      loginBtn.onclick = () => {
+        loginForm.style.marginLeft = "0%";
+        loginText.style.marginLeft = "0%";
+      };
+      signupLink.onclick = () => {
+        signupBtn.click();
+        return false;
+      };
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+      function showErrorMessage(msg) {
+        toasting.create({
+          title: "Error",
+          text: msg,
+          type: "error",
+          progressBarType: "error",
+          timeout: 2000,
+        });
+      }
+      function showSuccessMessage(msg) {
+        toasting.create({
+          title: "Success",
+          text: msg,
+          type: "success",
+          progressBarType: "uccess",
+          timeout: 2000,
+        });
+      }
+    </script>
+    <script>
+      function register() {
+        const name = document.getElementById("name").value;
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+        const data = { name, email, password };
+        $.ajax({
+          type: "POST",
+          url: "/register",
+          data: data,
+          dataType: "json",
+          success: (res) => {
+            console.log(res);
+            if (res.message === "Success") {
+              showSuccessMessage("You are now SuccessFully Register");
+            } else if (res.message === '"name" is not allowed to be empty') {
+              showErrorMessage("Name is not allowed to be empty");
+            } else if (res.message === '"email" is not allowed to be empty') {
+              showErrorMessage("Email is not allowed to be empty");
+            } else if (
+              res.message === '"password" is not allowed to be empty'
+            ) {
+              showErrorMessage("Password is not allowed to be empty");
+            } else if (res.message === '"email" must be a valid email') {
+              showErrorMessage("Email must be a valid email");
+            }
+          },
+        });
+      }
+    </script>
+    <script>
+      function login() {
+        const email = document.getElementById("email1").value;
+        const password = document.getElementById("password1").value;
+        const data = { email, password };
+        $.ajax({
+          type: "POST",
+          url: "/login",
+          async: false,
+          data: data,
+          dataType: "json",
+          success: (data) => {
+            console.log(data);
+            if (data.message === "Login Success") {
+              localStorage.setItem("data", data["id"]);
+              window.location = "getStudent"
+              showSuccessMessage("You are now SuccessFully Register");
+            } else if (data.message === '"email" is not allowed to be empty') {
+              showErrorMessage("Email is not allowed to be empty");
+            } else if (
+              data.message === '"password" is not allowed to be empty'
+            ) {
+              showErrorMessage("Password is not allowed to be empty");
+            } else if (data.message === '"email" must be a valid email') {
+              showErrorMessage("Email must be a valid email");
+            } else if (data.message === "Invalid Username or Password") {
+              showErrorMessage("Invalid Username or Password");
+            }
+          },
+        });
+      }
+    </script>
+  </body>
+</html>

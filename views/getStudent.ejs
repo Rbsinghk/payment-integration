@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- <link rel="stylesheet" href="style.css" /> -->
+  <!-- <script src="/socket.io/socket.io.js"></script> -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css"
+    integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <script src="/toasting.js"></script>
+  <link rel="stylesheet" href="/toasting.css">
+  <title>Get Student</title>
+</head>
+<style>
+  table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  td,
+  th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+  }
+
+  tr:nth-child(even) {
+    background-color: #dddddd;
+  }
+
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    padding-top: 100px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.4);
+  }
+
+  .modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 25%;
+  }
+
+  .close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+
+  .close:hover,
+  .close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .stripe-button-el {
+    position: fixed;
+    left: -20%;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+  }
+
+  .wrapper {
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(180deg, #04fafd, 5%, #99d4ff, 50%, #151635);
+    position: absolute;
+  }
+
+  .wrapper h1 {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    position: absolute;
+    font-family: sans-serif;
+    letter-spacing: 1px;
+    word-spacing: 2px;
+    color: #fff;
+    font-size: 40px;
+    font-weight: 888;
+    text-transform: uppercase;
+  }
+
+  .wrapper div {
+    height: 60px;
+    width: 60px;
+    border: 2px solid rgba(255, 255, 255, 0.7);
+    border-radius: 50px;
+    position: absolute;
+    top: 10%;
+    left: 10%;
+    animation: 4s linear infinite;
+  }
+
+  div .dot {
+    height: 10px;
+    width: 10px;
+    border-radius: 50px;
+    background: rgba(255, 255, 255, 0.5);
+    position: absolute;
+    top: 20%;
+    right: 20%;
+  }
+
+  .wrapper div:nth-child(1) {
+    top: 20%;
+    left: 20%;
+    animation: animate 8s linear infinite;
+  }
+
+  .wrapper div:nth-child(2) {
+    top: 60%;
+    left: 80%;
+    animation: animate 10s linear infinite;
+  }
+
+  .wrapper div:nth-child(3) {
+    top: 40%;
+    left: 40%;
+    animation: animate 3s linear infinite;
+  }
+
+  .wrapper div:nth-child(4) {
+    top: 66%;
+    left: 30%;
+    animation: animate 7s linear infinite;
+  }
+
+  .wrapper div:nth-child(5) {
+    top: 90%;
+    left: 10%;
+    animation: animate 9s linear infinite;
+  }
+
+  .wrapper div:nth-child(6) {
+    top: 30%;
+    left: 60%;
+    animation: animate 5s linear infinite;
+  }
+
+  .wrapper div:nth-child(7) {
+    top: 70%;
+    left: 20%;
+    animation: animate 8s linear infinite;
+  }
+
+  .wrapper div:nth-child(8) {
+    top: 75%;
+    left: 60%;
+    animation: animate 10s linear infinite;
+  }
+
+  .wrapper div:nth-child(9) {
+    top: 50%;
+    left: 50%;
+    animation: animate 6s linear infinite;
+  }
+
+  .wrapper div:nth-child(10) {
+    top: 45%;
+    left: 20%;
+    animation: animate 10s linear infinite;
+  }
+
+  .wrapper div:nth-child(11) {
+    top: 10%;
+    left: 90%;
+    animation: animate 9s linear infinite;
+  }
+
+  .wrapper div:nth-child(12) {
+    top: 20%;
+    left: 70%;
+    animation: animate 7s linear infinite;
+  }
+
+  .wrapper div:nth-child(13) {
+    top: 20%;
+    left: 20%;
+    animation: animate 8s linear infinite;
+  }
+
+  .wrapper div:nth-child(14) {
+    top: 60%;
+    left: 5%;
+    animation: animate 6s linear infinite;
+  }
+
+  .wrapper div:nth-child(15) {
+    top: 90%;
+    left: 80%;
+    animation: animate 9s linear infinite;
+  }
+
+  @keyframes animate {
+    0% {
+      transform: scale(0) translateY(0) rotate(70deg);
+    }
+
+    100% {
+      transform: scale(1.3) translateY(-100px) rotate(360deg);
+    }
+  }
+
+  .bg-image {
+    position: absolute;
+    width: 100%;
+  }
+</style>
+<title>Student Marks</title>
+</head>
+<header>
+  <div class="wrapper">
+    <div><span class="dot"></span></div>
+    <div><span class="dot"></span></div>
+    <div><span class="dot"></span></div>
+    <div><span class="dot"></span></div>
+    <div><span class="dot"></span></div>
+    <div><span class="dot"></span></div>
+    <div><span class="dot"></span></div>
+    <div><span class="dot"></span></div>
+    <div><span class="dot"></span></div>
+    <div><span class="dot"></span></div>
+    <div><span class="dot"></span></div>
+    <div><span class="dot"></span></div>
+    <div><span class="dot"></span></div>
+    <div><span class="dot"></span></div>
+    <div><span class="dot"></span></div>
+  </div>
+  <div class="bg-image">
+    <div class="append">
+      <h2 style="text-align: center;
+      margin: 25px;">Student Marks</h2>
+      <table class="table ">
+      </table>
+    </div>
+    <button id="myBtn" class="btn btn-primary float-right mt-3 mb-3 mr-2">Add Marks</button>
+    <div id="myModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <form>
+          <div class="container" id="append">
+            <div id="row" class="row">
+              <div class="col-sm form-group">
+                <label for="name">SubjectName</label>
+                <h4 id="english1" name="subject">English</h4>
+                <h4 id="gujarati1" name="subject">Gujarati</h4>
+                <h4 id="hindi1" name="subject">Hindi</h4>
+                <h4 id="maths1" name="subject">Maths</h4>
+                <h4 id="ss1" name="subject">S.S</h4>
+                <!-- <input id="subject1" name="subject" type="text" class="form-control"> -->
+              </div>
+              <div class="col-sm form-group">
+                <label for="name">Marks</label>
+                <input id="english" name="marks" type="number" class="form-control">
+                <input id="gujarati" name="marks" type="number" class="form-control">
+                <input id="hindi" name="marks" type="number" class="form-control">
+                <input id="maths" name="marks" type="number" class="form-control">
+                <input id="ss" name="marks" type="number" class="form-control">
+              </div>
+            </div>
+          </div>
+          <div id="error" style="color: red;"></div>
+          <div class="modal-footer">
+            <button id="submit" class="btn btn-primary btn-block"
+              onclick=" event.preventDefault(); register()">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <button id="myBtn1" class="btn btn-primary float-right mt-3 mb-3 mr-2">Students Greter than 490</button>
+    <div id="myModal1" class="modal">
+      <div class="modal-content">
+        <span class="close1">&times;</span>
+        <div id="chartContainer1" style="height: 370px; width: 100%;"></div>
+      </div>
+    </div>
+    <button id="myBtn2" class="btn btn-primary float-right mt-3 mb-3 mr-2">Students Between 75 And 90</button>
+    <div id="myModal2" class="modal">
+      <div class="modal-content">
+        <span class="close2">&times;</span>
+        <div id="chartContainer2" style="height: 370px; width: 100%;"></div>
+      </div>
+    </div>
+    <button id="myBtn3" class="btn btn-primary float-right mt-3 mb-3 mr-2">Grade Card</button>
+    <div id="myModal3" class="modal">
+      <div class="modal-content">
+        <span class="close3">&times;</span>
+        <div id="chartContainer3" style="height: 370px; width: 100%;"></div>
+      </div>
+    </div>
+    <button id="myBtn4" class="btn btn-primary float-right mt-3 mb-3 mr-2">Student With 90</button>
+    <div id="myModal4" class="modal">
+      <div class="modal-content">
+        <span class="close4">&times;</span>
+        <div id="chartContainer4" style="height: 370px; width: 100%;"></div>
+      </div>
+    </div>
+    <button id="myBtn5" class="btn btn-primary float-right mt-3 mb-3 mr-2">Pay</button>
+    <div id="myModal5" class="modal">
+      <div class="modal-content">
+        <span class="close5">&times;</span>
+        <form>
+          <div class="container" id="append">
+            <div id="row" class="row">
+              <div class="col-sm form-group">
+                <!-- <label for="name">SubjectName</label> -->
+                <h4 id="name5" name="subject">Name</h4>
+                <h4 id="price5" name="subject">Price</h4>
+                <!-- <input id="subject1" name="subject" type="text" class="form-control"> -->
+              </div>
+              <div class="col-sm form-group">
+                <!-- <label for="name">Marks</label> -->
+                <input id="name" name="name" class="form-control">
+                <input id="price" name="price" type="number" class="form-control">
+              </div>
+            </div>
+          </div>
+          <div id="error" style="color: red;"></div>
+          <div class="modal-footer">
+            <button id="submit1" class="btn btn-primary btn-block">Submit</button>
+            <button id="stripe212" class="btn btn-primary btn-block"
+              onclick=" event.preventDefault(); $('#stripe').trigger('click');">Stripe</button>
+            <button id="net" class="btn btn-primary btn-block">Authorize.Net</button>
+            <div id="myModalNet" class="modal">
+              <div class="modal-content">
+                <span class="closeNet">&times;</span>
+                <form>
+                  <div class="container" id="append">
+                    <div id="row" class="row">
+                      <div class="col-sm form-group">
+                        <label for="name">Form</label>
+                        <h4 name="subject">cc</h4>
+                        <h4 name="subject">cvv</h4>
+                        <h4 name="subject">expire</h4>
+                        <!-- <h4 name="subject">amount</h4> -->
+                      </div>
+                      <div class="col-sm form-group">
+                        <label for="data">Data</label>
+                        <input id="cc" name="marks" class="form-control">
+                        <input id="cvv" name="marks" class="form-control">
+                        <input id="expire" name="marks" class="form-control">
+                        <!-- <input id="amount" name="marks" type="number" class="form-control"> -->
+                      </div>
+                    </div>
+                  </div>
+                  <div id="error" style="color: red;"></div>
+                  <div class="modal-footer">
+                    <button id="submitNet" class="btn btn-primary btn-block"
+                      onclick=" event.preventDefault();">Submit</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+      </div>
+      </form>
+    </div>
+  </div>
+</header>
+</div>
+
+<body>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script>
+    var e = '';
+    var g = '';
+    var h = '';
+    var m = '';
+    var s = '';
+    $.ajax({
+      type: "POST",
+      url: "/getStudentById",
+      data: { studentId: localStorage.getItem("data") },
+      dataType: "json",
+      success: (res) => {
+        e = res.english;
+        g = res.gujarati;
+        h = res.hindi
+        m = res.maths
+        s = res.ss
+        var html = "";
+        html += ` <tr>
+    <th>Subject</th>
+    <th>Marks</th>
+  </tr>
+  <tr>
+    <td>English</td>
+    <td>${res.english}</td>
+  </tr>
+  <tr>
+    <td>Gujarati</td>
+    <td>${res.gujarati}</td>
+  </tr>
+  <tr>
+    <td>Hindi</td>
+    <td>${res.hindi}</td>
+  </tr>
+  <tr>
+    <td>Maths</td>
+    <td>${res.maths}</td>
+  </tr>
+  <tr>
+    <td>S.S</td>
+    <td>${res.ss}</td>
+  </tr>
+  `;
+        $(".append .table").append(html);
+      },
+      error: (error) => {
+        alert("First You have to Login");
+        window.location = "/login";
+      },
+    });
+    var modal = document.getElementById("myModal");
+    var btn = document.getElementById("myBtn");
+    var span = document.getElementsByClassName("close")[0];
+    btn.onclick = function () {
+      modal.style.display = "block";
+    }
+    span.onclick = function () {
+      modal.style.display = "none";
+    }
+    window.onclick = function (event) {
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+    }
+    function showErrorMessage(msg) {
+      toasting.create({
+        "title": "Error",
+        "text": msg,
+        "type": "error",
+        "progressBarType": "error",
+        "timeout": 2000
+      });
+    }
+    function register() {
+      const english = Number(document.getElementById("english").value) ? Number(document.getElementById("english").value) : e;
+      const gujarati = Number(document.getElementById("gujarati").value) ? Number(document.getElementById("gujarati").value) : g;
+      const hindi = Number(document.getElementById("hindi").value) ? Number(document.getElementById("hindi").value) : h;
+      const maths = Number(document.getElementById("maths").value) ? Number(document.getElementById("maths").value) : m;
+      const ss = Number(document.getElementById("ss").value) ? Number(document.getElementById("ss").value) : s;
+      const studentId = localStorage.getItem("data")
+      const data = { english, gujarati, hindi, maths, ss, studentId };
+      $.ajax({
+        type: "POST",
+        url: "/studentRegister",
+        data: data,
+        dataType: "json",
+        success: (res) => {
+          if (res.message === "Student Marks Updated SuccessFully") {
+            window.location = "getStudent"
+          } else if (res.message === "\"english\" must be greater than or equal to 0") {
+            showErrorMessage("English must be greater than or equal to 0");
+          } else if (res.message === "\"maths\" must be greater than or equal to 0") {
+            showErrorMessage("Maths must be greater than or equal to 0");
+          } else if (res.message === "\"gujarati\" must be greater than or equal to 0") {
+            showErrorMessage("Gujarati must be greater than or equal to 0");
+          } else if (res.message === "\"hindi\" must be greater than or equal to 0") {
+            showErrorMessage("Hindi must be greater than or equal to 0");
+          } else if (res.message === "\"ss\" must be greater than or equal to 0") {
+            showErrorMessage("S.S must be greater than or equal to 0");
+          }
+        },
+        error: (err) => {
+          showErrorMessage("There is Error");
+        }
+      });
+    }
+    $(document).ready(() => {
+      var modal1 = document.getElementById("myModal1");
+      var btn1 = document.getElementById("myBtn1");
+      var span1 = document.getElementsByClassName("close1")[0];
+      btn1.onclick = function () {
+        modal1.style.display = "block";
+      }
+      span1.onclick = function () {
+        modal1.style.display = "none";
+      }
+      window.onclick = function (event) {
+        if (event.target == modal1) {
+          modal1.style.display = "none";
+        }
+      }
+      $("#myBtn1").click(() => {
+        $.ajax({
+          type: "GET",
+          url: "/getAllStudentAboveFourNinety",
+          success: (res) => {
+            let less490Per = (100 * res.Less490) / (res.Less490 + res.Above490);
+            let above490Per = (100 * res.Above490) / (res.Less490 + res.Above490);
+            var options = {
+              title: {
+                text: "Student Marks Above Than 490"
+              },
+              animationEnabled: true,
+              data: [{
+                type: "pie",
+                toolTipContent: "<b>{label}</b>: {y}%",
+                showInLegend: "true",
+                // legendText: "{label}",
+                indexLabelFontSize: 16,
+                indexLabel: "{label} - {y}%",
+                dataPoints: [
+                  { y: above490Per, label: "Student Marks Above Than 490" },
+                  { y: less490Per, label: "Student Marks Less Than 490" },
+                ]
+              }]
+            };
+            $("#chartContainer1").CanvasJSChart(options);
+          }
+        })
+      })
+      var modal2 = document.getElementById("myModal2");
+      var btn2 = document.getElementById("myBtn2");
+      var span2 = document.getElementsByClassName("close2")[0];
+      btn2.onclick = function () {
+        modal2.style.display = "block";
+      }
+      span2.onclick = function () {
+        modal2.style.display = "none";
+      }
+      window.onclick = function (event) {
+        if (event.target == modal2) {
+          modal2.style.display = "none";
+        }
+      }
+      $("#myBtn2").click(() => {
+        $.ajax({
+          type: "GET",
+          url: "/getStudentBetweenSeventyFiveAndNinty",
+          success: (res) => {
+            let seventyFiveAndNinty = (100 * res.seventyFiveAndNinty) / (res.seventyFiveAndNinty + res.Others);
+            let Others = (100 * res.Others) / (res.seventyFiveAndNinty + res.Others);
+            var options2 = {
+              title: {
+                text: "Student Marks Between 75 & 90"
+              },
+              animationEnabled: true,
+              data: [{
+                type: "pie",
+                startAngle: 40,
+                toolTipContent: "<b>{label}</b>: {y}%",
+                showInLegend: "true",
+                legendText: "{label}",
+                indexLabelFontSize: 16,
+                indexLabel: "{label} - {y}%",
+                dataPoints: [
+                  { y: seventyFiveAndNinty, label: "Student Marks Between 75 & 90" },
+                  { y: Others, label: "Others" },
+                ]
+              }]
+            };
+            $("#chartContainer2").CanvasJSChart(options2);
+          }
+        })
+      })
+      var modal3 = document.getElementById("myModal3");
+      var btn3 = document.getElementById("myBtn3");
+      var span3 = document.getElementsByClassName("close3")[0];
+      btn3.onclick = function () {
+        modal3.style.display = "block";
+      }
+      span3.onclick = function () {
+        modal3.style.display = "none";
+      }
+      window.onclick = function (event) {
+        if (event.target == modal3) {
+          modal3.style.display = "none";
+        }
+      }
+      $("#myBtn3").click(() => {
+        $.ajax({
+          type: "POST",
+          url: "/getStudentGrade",
+          data: { id: localStorage.getItem("data") },
+          dataType: "json",
+          success: (res) => {
+            console.log(res);
+            if (res.message == 'Student is Pass with Distinction') {
+              $("#chartContainer3").html('<h1>Student is Pass with Distinction</h1>').css('color', 'green');
+            }
+            if (res.message == 'Student is Fail') {
+              $("#chartContainer3").html('<h1>Student is Fail</h1>').css('color', 'red');
+            }
+            if (res.message == 'Student is Pass') {
+              $("#chartContainer3").html('<h1>Student is Pass</h1>').css('color', 'blue');
+            }
+          }
+        })
+      })
+      var modal4 = document.getElementById("myModal4");
+      var btn4 = document.getElementById("myBtn4");
+      var span4 = document.getElementsByClassName("close4")[0];
+      btn4.onclick = function () {
+        modal4.style.display = "block";
+      }
+      span4.onclick = function () {
+        modal4.style.display = "none";
+      }
+      window.onclick = function (event) {
+        if (event.target == modal4) {
+          modal4.style.display = "none";
+        }
+      }
+      $("#myBtn4").click(() => {
+        $.ajax({
+          type: "GET",
+          url: "/getAllNintyMarksStudent",
+          success: (res) => {
+            let studentWith90 = (100 * res.studentWith90) / (res.studentWith90 + res.studentWithOut90);
+            let studentWithOut90 = (100 * res.studentWithOut90) / (res.studentWith90 + res.studentWithOut90);
+            var options3 = {
+              title: {
+                text: "Student With 90"
+              },
+              animationEnabled: true,
+              data: [{
+                type: "pie",
+                startAngle: 40,
+                toolTipContent: "<b>{label}</b>: {y}%",
+                showInLegend: "true",
+                legendText: "{label}",
+                indexLabelFontSize: 16,
+                indexLabel: "{label} - {y}%",
+                dataPoints: [
+                  { y: studentWith90, label: "Student With 90" },
+                  { y: studentWithOut90, label: "Student WithOut 90" },
+                ]
+              }]
+            };
+            $("#chartContainer4").CanvasJSChart(options3);
+          }
+        })
+      })
+      var modal5 = document.getElementById("myModal5");
+      var btn5 = document.getElementById("myBtn5");
+      var span5 = document.getElementsByClassName("close5")[0];
+      btn5.onclick = function () {
+        modal5.style.display = "block";
+      }
+      span5.onclick = function () {
+        modal5.style.display = "none";
+      }
+      window.onclick = function (event) {
+        if (event.target == modal5) {
+          modal5.style.display = "none";
+        }
+      }
+      $('#submit1').click((e) => {
+        e.preventDefault()
+        const name = $('#name').val()
+        const price = $('#price').val()
+        const data1 = { name, price };
+        $.ajax({
+          type: "POST",
+          url: "/bookinTicket/pay",
+          data: data1,
+          dataType: "json",
+          success: (res) => {
+            debugger
+            console.log(res.message);
+            window.location = res.message
+          }
+        })
+      })
+      var myModalNet = document.getElementById("myModalNet");
+      var net = document.getElementById("net");
+      var closeNet = document.getElementsByClassName("closeNet")[0];
+      net.onclick = function () {
+        myModalNet.style.display = "block";
+      }
+      closeNet.onclick = function () {
+        myModalNet.style.display = "none";
+      }
+      window.onclick = function (event) {
+        if (event.target == myModalNet) {
+          myModalNet.style.display = "none";
+        }
+      }
+      function showSuccessMessage(msg) {
+        toasting.create({
+          title: "Success",
+          text: msg,
+          type: "success",
+          progressBarType: "success",
+          timeout: 2000,
+        });
+      }
+      function showErrorMessage(msg) {
+        toasting.create({
+          "title": "Error",
+          "text": msg,
+          "type": "error",
+          "progressBarType": "error",
+          "timeout": 2000
+        });
+      }
+      $('#net').click((e) => {
+        e.preventDefault()
+        $('#submitNet').click((e) => {
+          e.preventDefault()
+          debugger
+          const name = $('#name').val()
+          // const price = $('#price').val()
+          const cc = $('#cc').val()
+          const cvv = $('#cvv').val()
+          const expire = $('#expire').val()
+          const amount = $('#price').val()
+          const data1 = { name, cc, cvv, expire, amount };
+          $.ajax({
+            type: "POST",
+            url: "/checkout",
+            data: data1,
+            dataType: "json",
+            success: (res) => {
+              debugger
+              if (res.message == 'Transaction was successful.') {
+                console.log(res.message);
+                showSuccessMessage("Transaction was successful.");
+                setTimeout(window.location = 'getStudent', 4000);
+              }
+              if (res.message == "Error") {
+                showErrorMessage("There is Error");
+              }
+              if (res.errors) {
+                showErrorMessage(res.errors[0].msg);
+              }
+              if (res.error) {
+                showErrorMessage("There is Error");
+              }
+            },
+            error: (err) => {
+              debugger
+              showErrorMessage("There is Error");
+              setTimeout(window.location = 'getStudent', 5000);
+            }
+          })
+        })
+      })
+
+    })
+
+  </script>
+  <form action="payment" method="POST">
+    <button id="stripe" style="visibility: hidden;">Stripe</button>
+    <script src="//checkout.stripe.com/v2/checkout.js" class="stripe-button" data-key="<%= key %>"
+      data-amount="<%= name %>" data-currency="usd" data-name="Rajbir Singh"
+      data-description="Buy Node.js Complete Course" data-locale="auto">
+      </script>
+  </form>
+  <script src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+  <script src="https://canvasjs.com/assets/script/jquery.canvasjs.min.js"></script>
+</body>
+
+</html>
